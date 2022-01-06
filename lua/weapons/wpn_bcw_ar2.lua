@@ -35,7 +35,6 @@ SWEP.Recoil.Decay_Treshold		= 1
 SWEP.Recoil.Decay_Exponent		= 1 -- Unused (deprecated)
 SWEP.Recoil.Table				= {}
 
-SWEP.Projectile = {}
 SWEP.Projectile.Mass        = 10    -- Grains
 SWEP.Projectile.Drag        = 0     -- No-Unit (multiplier)
 SWEP.Projectile.Gravity     = 0     -- Inches per second
@@ -47,22 +46,18 @@ SWEP.Projectile.Initialize	= function(self)
 
 	self.HeadMaterial = Material("effects/combinemuzzle1")
 	self.TracerMaterial = Material("effects/gunshiptracer")
+	self.TracerLength = 128
+	self.TracerWidth = 8
 end
 
-SWEP.Projectile.Draw		= function(self)
-	-- Called every frame when bullet is about to be drawn.
-	render.SetMaterial(self.HeadMaterial)
-	render.DrawSprite(self.Position, 5, 8, color_white)
-
-	render.SetMaterial(self.TracerMaterial)
-	render.DrawBeam(self.Position, self.Position - self.Velocity:GetNormalized() * 128, 16, 1, 0, color_white)
-end
 SWEP.Projectile.OnImpact	= function(self)
 	-- Called when bullet hits a solid object.
 	local effect = EffectData()
 	effect:SetOrigin(self.TraceResult.HitPos + self.TraceResult.HitNormal)
-	effect:SetNormal(self.TraceResult.Normal)
+	effect:SetNormal(self.TraceResult.HitNormal)
 	util.Effect("AR2Impact", effect)
+
+	util.BulletImpactW(self.TraceResult, self.Inflictor)
 end
 
 SWEP.Primary.ClipSize		= 30 -- Rounds

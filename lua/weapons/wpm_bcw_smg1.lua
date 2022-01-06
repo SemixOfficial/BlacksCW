@@ -35,27 +35,11 @@ SWEP.Recoil.Decay_Treshold = 1
 SWEP.Recoil.Decay_Exponent = 1
 SWEP.Recoil.Table = {}
 
-SWEP.Projectile = {}
 SWEP.Projectile.Mass        = 42	-- Grains
 SWEP.Projectile.Drag        = 0.1	-- No-Unit (multiplier)
 SWEP.Projectile.Gravity     = 800	-- Inches per second
 SWEP.Projectile.Velocity    = 600   -- Meters per second
 SWEP.Projectile.Caliber     = 4.6	-- Milimeters
-
-SWEP.Projectile.Initialize	= function(self)
-	-- Called when bullet is initialized.
-	self.TracerMaterial = Material("effects/spark")
-end
-
-SWEP.Projectile.Draw		= function(self)
-	-- Called every frame when bullet is about to be drawn.
-	render.SetMaterial(self.TracerMaterial)
-	render.DrawBeam(self.Position, self.Position - self.Velocity:GetNormalized() * 128, 8, 1, 0, color_white)
-end
-SWEP.Projectile.OnImpact	= function(self)
-	-- Called when bullet hits a solid object.
-	util.BulletImpactW(self.TraceResult, self.Attacker)
-end
 
 SWEP.Primary.ClipSize		= 40 -- Rounds
 SWEP.Primary.DefaultClip	= 160 -- Rounds

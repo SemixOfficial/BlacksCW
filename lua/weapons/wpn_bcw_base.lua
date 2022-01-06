@@ -25,6 +25,41 @@ SWEP.Secondary.DefaultClip	= 0
 SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= "none"
 
+SWEP.Projectile = {}
+SWEP.Projectile.Mass        = 1	-- Grains
+SWEP.Projectile.Drag        = 0.3	-- No-Unit (multiplier)
+SWEP.Projectile.Gravity     = 800	-- Inches per second
+SWEP.Projectile.Velocity    = 400   -- Meters per second
+SWEP.Projectile.Caliber     = 9	-- Milimeters
+
+SWEP.Projectile.Initialize	= function(self)
+	-- Called when bullet is initialized.
+	self.TracerMaterial = Material("effects/spark")
+	self.HeadMaterial = Material("effects/yellowflare")
+	self.TracerLength = 128
+	self.TracerWidth = 8
+end
+
+SWEP.Projectile.Draw		= function(self)
+	-- Called every frame when bullet is about to be drawn.
+	render.SetMaterial(self.TracerMaterial)
+	render.DrawBeam(self.Position, self.Position - self.Velocity:GetNormalized() * 128, self.TracerWidth, 1, 0, color_white)
+
+	local bulletDir = self.Position - (self.Position - self.Velocity:GetNormalized() * 128)
+
+	local degAway = 90 - math.abs(math.deg(math.asin(bulletDir:Dot(EyeAngles():Forward()) / bulletDir:Length())))
+
+	local w = (self.TracerWidth * 2) * (math.max(15 - degAway, 0) / 15)
+	local h = (self.TracerWidth * 2) * (math.max(15 - degAway, 0) / 15)
+
+	render.SetMaterial(self.HeadMaterial)
+	render.DrawSprite(self.Position, w, h, color_white)
+end
+SWEP.Projectile.OnImpact	= function(self)
+	-- Called when bullet hits a solid object.
+	util.BulletImpactW(self.TraceResult, self.Attacker)
+end
+
 function SWEP:Initialize()
 	self:SetSpreadRandomSeed(0)
 	self:SetHoldType(self.HoldType)
