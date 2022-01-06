@@ -41,6 +41,11 @@ SWEP.Projectile.Initialize	= function(self)
 end
 
 SWEP.Projectile.Draw		= function(self)
+	-- do not render for the first 10ms, to prevent bullets in ur eyeballs!
+	if (self.Attacker == LocalPlayer() and not self.Attacker:ShouldDrawLocalPlayer()) and self.CreationTime + 0.010 > BlacksCW.CurrentTime then
+		return
+	end
+
 	-- Called every frame when bullet is about to be drawn.
 	render.SetMaterial(self.TracerMaterial)
 	render.DrawBeam(self.Position, self.Position - self.Velocity:GetNormalized() * 128, self.TracerWidth, 1, 0, color_white)
