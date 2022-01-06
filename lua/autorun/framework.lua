@@ -140,7 +140,6 @@ if CLIENT then
 		local position = net.ReadVector()
 		local velocity = net.ReadVector() / DIRECTION_SCALEUP
 		local speed = net.ReadFloat()
-		local creationTime = net.ReadFloat()
 
 		velocity:Mul(speed)
 
@@ -162,7 +161,7 @@ if CLIENT then
 		bulletInfo.Initialize		= projectileInfo.Initialize
 		bulletInfo.Draw				= projectileInfo.Draw
 		bulletInfo.OnImpact			= projectileInfo.OnImpact
-		bulletInfo.CreationTime 	= creationTime
+		bulletInfo.CreationTime 	= BlacksCW.CurrentTime
 
 		BlacksCW.FireBullets(bulletInfo)
 	end)
@@ -215,7 +214,6 @@ function BlacksCW.FireBullets(bulletInfo)
 			net.WriteVector(bulletInfo.Position)
 			net.WriteVector(bulletInfo.Velocity:GetNormalized() * DIRECTION_SCALEUP)
 			net.WriteFloat(bulletInfo.Velocity:Length())
-			net.WriteFloat(bullet.CreationTime)
 		net.SendOmit(bulletInfo.Attacker)
 	end
 end
