@@ -14,7 +14,7 @@ SWEP.WorldModel		= "models/weapons/w_irifle.mdl"
 SWEP.Spawnable		= true
 SWEP.AdminOnly		= false
 
-
+SWEP.CanChamberRound = false
 SWEP.CycleTime = 60 / 600 -- RPM
 
 SWEP.Animations = {
@@ -25,9 +25,9 @@ SWEP.Animations = {
 SWEP.Recoil = {}
 SWEP.Recoil.RandomSeed			= 117
 SWEP.Recoil.Scale				= 0.65
-SWEP.Recoil.Angle				= 60
-SWEP.Recoil.AngleVariance		= 10
-SWEP.Recoil.Magnitude			= 10
+SWEP.Recoil.Angle				= 90
+SWEP.Recoil.AngleVariance		= 20
+SWEP.Recoil.Magnitude			= 20
 SWEP.Recoil.MagnitudeVariance	= 0
 SWEP.Recoil.MagnitudeIncrease	= 2
 SWEP.Recoil.Decay				= 1
@@ -35,30 +35,33 @@ SWEP.Recoil.Decay_Treshold		= 1
 SWEP.Recoil.Decay_Exponent		= 1 -- Unused (deprecated)
 SWEP.Recoil.Table				= {}
 
-SWEP.Projectile.Mass        = 10    -- Grains
-SWEP.Projectile.Drag        = 0     -- No-Unit (multiplier)
-SWEP.Projectile.Gravity     = 0     -- Inches per second
-SWEP.Projectile.Velocity    = 450   -- Meters per second
-SWEP.Projectile.Caliber     = 8		-- Milimeters
+function SWEP:ProjectileInit()
+	self.Projectile = table.Copy(BaseClass.Projectile)
+	self.Projectile.Mass        = 10    -- Grains
+	self.Projectile.Drag        = 0     -- No-Unit (multiplier)
+	self.Projectile.Gravity     = 0     -- Inches per second
+	self.Projectile.Velocity    = 450   -- Meters per second
+	self.Projectile.Caliber     = 8		-- Milimeters
 
-SWEP.Projectile.Initialize	= function(self)
-	-- Called when bullet is initialized.
+	self.Projectile.Initialize	= function(proj)
+		-- Called when bullet is initialized.
 
-	self.HeadMaterial = Material("effects/combinemuzzle1")
-	self.TracerMaterial = Material("effects/gunshiptracer")
-	self.TracerLength = 128
-	self.TracerWidth = 8
+		proj.HeadMaterial = Material("effects/combinemuzzle1")
+		proj.TracerMaterial = Material("effects/gunshiptracer")
+		proj.TracerLength = 128
+		proj.TracerWidth = 8
+	end
+	self.Projectile.OnImpact	= function(proj)
+		-- Called when bullet hits a solid object.
+		local effect = EffectData()
+		effect:SetOrigin(proj.TraceResult.HitPos + proj.TraceResult.HitNormal)
+		effect:SetNormal(proj.TraceResult.HitNormal)
+		util.Effect("AR2Impact", effect)
+
+		util.BulletImpactW(proj.TraceResult, proj.Inflictor)
+	end
 end
 
-SWEP.Projectile.OnImpact	= function(self)
-	-- Called when bullet hits a solid object.
-	local effect = EffectData()
-	effect:SetOrigin(self.TraceResult.HitPos + self.TraceResult.HitNormal)
-	effect:SetNormal(self.TraceResult.HitNormal)
-	util.Effect("AR2Impact", effect)
-
-	util.BulletImpactW(self.TraceResult, self.Inflictor)
-end
 
 SWEP.Primary.ClipSize		= 30 -- Rounds
 SWEP.Primary.DefaultClip	= 90 -- Rounds

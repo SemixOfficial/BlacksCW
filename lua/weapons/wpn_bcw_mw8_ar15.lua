@@ -36,11 +36,14 @@ SWEP.Recoil.Decay_Treshold = 1.1
 SWEP.Recoil.Decay_Exponent = 1
 SWEP.Recoil.Table = {}
 
-SWEP.Projectile.Mass        = 42	-- Grains
-SWEP.Projectile.Drag        = 0.1	-- No-Unit (multiplier)
-SWEP.Projectile.Gravity     = 800	-- Inches per second
-SWEP.Projectile.Velocity    = 600   -- Meters per second
-SWEP.Projectile.Caliber     = 4.6	-- Milimeters
+function SWEP:ProjectileInit()
+	self.Projectile = table.Copy(BaseClass.Projectile)
+	self.Projectile.Mass        = 42	-- Grains
+	self.Projectile.Drag        = 0.1	-- No-Unit (multiplier)
+	self.Projectile.Gravity     = 800	-- Inches per second
+	self.Projectile.Velocity    = 600   -- Meters per second
+	self.Projectile.Caliber     = 4.6	-- Milimeters
+end
 
 SWEP.Primary.ClipSize		= 30 -- Rounds
 SWEP.Primary.DefaultClip	= 90 -- Rounds

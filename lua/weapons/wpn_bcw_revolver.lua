@@ -24,11 +24,11 @@ SWEP.Animations = {
 }
 
 SWEP.Recoil = {}
-SWEP.Recoil.RandomSeed = 324
+SWEP.Recoil.RandomSeed = 357
 SWEP.Recoil.Scale = 1
-SWEP.Recoil.Angle = 110
-SWEP.Recoil.AngleVariance = 10
-SWEP.Recoil.Magnitude = 80
+SWEP.Recoil.Angle = 90
+SWEP.Recoil.AngleVariance = 65
+SWEP.Recoil.Magnitude = 100
 SWEP.Recoil.MagnitudeVariance = 0
 SWEP.Recoil.MagnitudeIncrease = 1
 SWEP.Recoil.Decay = 1
@@ -36,18 +36,21 @@ SWEP.Recoil.Decay_Treshold = 1.25
 SWEP.Recoil.Decay_Exponent = 1
 SWEP.Recoil.Table = {}
 
-SWEP.Projectile.Mass        = 125	-- Grains
-SWEP.Projectile.Drag        = 0.1	-- No-Unit (multiplier)
-SWEP.Projectile.Gravity     = 800	-- Inches per second
-SWEP.Projectile.Velocity    = 440   -- Meters per second
-SWEP.Projectile.Caliber     = 9.1	-- Milimeters
+function SWEP:ProjectileInit()
+	self.Projectile = table.Copy(BaseClass.Projectile)
+	self.Projectile.Mass        = 125	-- Grains
+	self.Projectile.Drag        = 0.1	-- No-Unit (multiplier)
+	self.Projectile.Gravity     = 800	-- Inches per second
+	self.Projectile.Velocity    = 440   -- Meters per second
+	self.Projectile.Caliber     = 9.1	-- Milimeters
 
-SWEP.Projectile.Initialize	= function(self)
-	-- Called when bullet is initialized.
-	self.TracerMaterial = Material("effects/spark")
-	self.HeadMaterial = Material("effects/yellowflare")
-	self.TracerLength = 128
-	self.TracerWidth = 16
+	self.Projectile.Initialize	= function(proj)
+		-- Called when bullet is initialized.
+		proj.TracerMaterial = Material("effects/spark")
+		proj.HeadMaterial = Material("effects/yellowflare")
+		proj.TracerLength = 128
+		proj.TracerWidth = 16
+	end
 end
 
 SWEP.Primary.ClipSize		= 6 -- Rounds

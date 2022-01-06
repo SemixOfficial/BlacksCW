@@ -69,6 +69,10 @@ function SWEP:Initialize()
 	self:SetSpreadRandomSeed(0)
 	self:SetHoldType(self.HoldType)
 	self:GenerateRecoilTable()
+
+	self:ProjectileInit()
+end
+function SWEP:ProjectileInit()
 end
 
 function SWEP:SetupDataTables()
