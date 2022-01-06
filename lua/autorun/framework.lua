@@ -200,7 +200,17 @@ function BlacksCW.FireBullets(bulletInfo)
 
 	bulletInfo.Initialize(bullet)
 
-	table.insert(BlacksCW.PhysBullets, bullet)
+	if CLIENT then
+		table.insert(BlacksCW.PhysBullets, bullet)
+	else
+		net.Start("BlacksCW_NetworkBullets", true)
+			net.WriteEntity(bulletInfo.Attacker)
+			net.WriteEntity(bulletInfo.Inflictor)
+			net.WriteVector(bulletInfo.Position)
+			net.WriteVector(bulletInfo.Velocity:GetNormalized())
+			net.WriteFloat(bulletInfo.Velocity:Length())
+		net.SendOmit(bulletInfo.Attacker)
+	end
 end
 
 function BlacksCW.SimulateBullet(bullet)

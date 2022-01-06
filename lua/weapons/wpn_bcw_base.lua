@@ -356,16 +356,9 @@ function SWEP:PrimaryAttack()
 	bulletInfo.Draw				= projectileInfo.Draw
 	bulletInfo.OnImpact			= projectileInfo.OnImpact
 
-	if CLIENT and IsFirstTimePredicted() then
+	-- server always IsFirstTimePredicted()
+	if IsFirstTimePredicted() then
 		BlacksCW.FireBullets(bulletInfo)
-	elseif SERVER then
-		net.Start("BlacksCW_NetworkBullets", true)
-		net.WriteEntity(bulletInfo.Attacker)
-		net.WriteEntity(bulletInfo.Inflictor)
-		net.WriteVector(bulletInfo.Position)
-		net.WriteNormal(bulletInfo.Velocity:GetNormalized())
-		net.WriteFloat(bulletInfo.Velocity:Length())
-		net.SendOmit(bulletInfo.Attacker)
 	end
 
 	self:EmitSound(self.Primary.Sound)
