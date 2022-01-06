@@ -74,24 +74,23 @@ end
 function SWEP:Think()
 	local owner = self:GetOwner()
 
-    if self:GetIsReloading() then
-        if CurTime() > self:GetReloadFinishTime() then
+	if self:GetIsReloading() then
+		if CurTime() > self:GetReloadFinishTime() then
 
 			local clip = self:Clip1()
 			local maxclip = self:GetMaxClip1()
-            local dif = self:GetMaxClip1() - self:Clip1()
-            local amt = math.min(self:Clip1() + owner:GetAmmoCount(self.Primary.Ammo), self:GetMaxClip1())
-			if dif ~= self:GetMaxClip1() then
+			local dif = self:GetMaxClip1() - self:Clip1()
+			local amt = math.min(self:Clip1() + owner:GetAmmoCount(self.Primary.Ammo), self:GetMaxClip1())
+			if self.CanChamberRound ~= false and dif ~= self:GetMaxClip1() then
 				dif = 1
 				amt = amt + 1
 			end
 
-
 			self:SetClip1(amt)
-            owner:RemoveAmmo(dif, self.Primary.Ammo)
-            self:SetIsReloading(false)
+			owner:RemoveAmmo(dif, self.Primary.Ammo)
+			self:SetIsReloading(false)
 			self:SetRecoilIndex(1)
-        end
+		end
 	end
 
 	self:RecoilThink()
@@ -151,7 +150,17 @@ end
 function SWEP:Reload()
 	local owner = self:GetOwner()
 	local viewmodel = owner:GetViewModel()
-	if self:GetIsReloading() or self:Clip1() >= (self:GetMaxClip1() + 1) then
+
+	if owner:GetAmmoCount(self.Primary.Ammo) == 0 then
+		return
+	end
+
+	local extra = 1
+	if self.CanChamberRound == false then
+		extra = 0
+	end
+
+	if self:GetIsReloading() or self:Clip1() >= (self:GetMaxClip1() + extra) then
 		return
 	end
 

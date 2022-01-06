@@ -15,6 +15,7 @@ SWEP.Spawnable		= true
 SWEP.AdminOnly		= false
 
 
+SWEP.CanChamberRound = false
 SWEP.CycleTime = 60 / 80 -- RPM
 
 SWEP.Animations = {
