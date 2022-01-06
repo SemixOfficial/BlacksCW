@@ -86,6 +86,8 @@ BlacksCW.UpdateRate = 240
 BlacksCW.TickInterval = 1 / BlacksCW.UpdateRate
 BlacksCW.TimeScale = 1
 
+local DIRECTION_SCALEUP = 100
+
 local host_timescale = GetConVar("host_timescale")
 function BlacksCW.GetSimulationTimeScale()
 	return BlacksCW.TimeScale * host_timescale:GetFloat()
@@ -135,15 +137,15 @@ if CLIENT then
 		local attacker = net.ReadEntity()
 		local inflictor = net.ReadEntity()
 		local position = net.ReadVector()
-		local velocity = net.ReadNormal()
+		local velocity = net.ReadVector() / DIRECTION_SCALEUP
 		local speed = net.ReadFloat()
 		local creationTime = net.ReadFloat()
+
+		velocity:Mul(speed)
 
 		if not IsValid(inflictor) then
 			return
 		end
-
-		velocity:Mul(speed)
 
 		local bulletInfo		= {}
 		local projectileInfo	= inflictor.Projectile
@@ -210,7 +212,7 @@ function BlacksCW.FireBullets(bulletInfo)
 			net.WriteEntity(bulletInfo.Attacker)
 			net.WriteEntity(bulletInfo.Inflictor)
 			net.WriteVector(bulletInfo.Position)
-			net.WriteVector(bulletInfo.Velocity:GetNormalized())
+			net.WriteVector(bulletInfo.Velocity:GetNormalized() * DIRECTION_SCALEUP)
 			net.WriteFloat(bulletInfo.Velocity:Length())
 			net.WriteFloat(bullet.CreationTime)
 		net.SendOmit(bulletInfo.Attacker)
