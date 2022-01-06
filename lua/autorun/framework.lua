@@ -219,12 +219,12 @@ function BlacksCW.SimulateBullet(bullet)
 		local acceleration = ((bullet.Gravity * BlacksCW.TickInterval) - (velocity:GetNormalized() * dragforce / bullet.Mass))
 		local nextvelocity = velocity + acceleration * BlacksCW.TickInterval
 
-		bullet.TraceData.start = position
-		bullet.TraceData.endpos= nextposition
-		bullet.TraceResult = util.TraceLine(bullet.TraceData)
+		bullet.TraceData.start  = position
+		bullet.TraceData.endpos = nextposition
+		bullet.TraceResult      = util.TraceLine(bullet.TraceData)
 
-		debugoverlay.Line(bullet.TraceResult.StartPos, bullet.TraceResult.HitPos, 4, Color(0, 255, 0, 255), true)
-		debugoverlay.BoxAngles(bullet.TraceResult.HitPos, Vector(-32, -1, -1), Vector(32, 1, 1), velocity:Angle(), 4, Color(0, 255, 0, 127))
+		--debugoverlay.Line(bullet.TraceResult.StartPos, bullet.TraceResult.HitPos, 4, Color(0, 255, 0, 255), true)
+		--debugoverlay.BoxAngles(bullet.TraceResult.HitPos, Vector(-32, -1, -1), Vector(32, 1, 1), velocity:Angle(), 4, Color(0, 255, 0, 127))
 
 		if bullet.TraceResult.Hit then
 			local hitEntity = bullet.TraceResult.Entity
@@ -241,6 +241,37 @@ function BlacksCW.SimulateBullet(bullet)
 			bullet.OnImpact(bullet, bullet.TraceResult)
 			bullet.IsMarkedForRemoval = true
 			break
+
+		-- see if we enter water during this simulation period
+		elseif bit.band(util.PointContents(bullet.TraceResult.HitPos), bit.bor(CONTENTS_WATER, CONTENTS_SLIME)) ~= 0 and
+			bit.band(util.PointContents(bullet.TraceResult.StartPos), bit.bor(CONTENTS_WATER, CONTENTS_SLIME)) == 0
+			then
+			local waterTrace = util.TraceLine({
+				start = bullet.TraceResult.StartPos,
+				endpos = bullet.TraceResult.HitPos,
+				mask = bit.bor(CONTENTS_WATER,CONTENTS_SLIME),
+				collisiongroup = COLLISION_GROUP_NONE,
+			})
+
+			if not waterTrace.AllSolid then
+				local data = EffectData()
+				data:SetOrigin(waterTrace.HitPos)
+				data:SetNormal(waterTrace.HitNormal)
+				data:SetScale(math.Rand(8, 12))
+
+				if bit.band(waterTrace.Contents, CONTENTS_SLIME) ~= 0 then
+					data:SetFlags(bit.bor(data:GetFlags(), FX_WATER_IN_SLIME))
+				else
+					data:SetFlags(bit.bnot(FX_WATER_IN_SLIME))
+				end
+
+				if SERVER and IsValid(ply) and ply:IsPlayer() then
+					SuppressHostEvents(ply)
+				end
+
+
+				util.Effect("gunshotsplash", data, not game.SinglePlayer())
+			end
 		end
 
 		bullet.Position = bullet.TraceResult.HitPos
