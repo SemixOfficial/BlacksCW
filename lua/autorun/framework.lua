@@ -73,6 +73,11 @@ BlacksCW.UpdateRate = 240
 BlacksCW.TickInterval = 1 / BlacksCW.UpdateRate
 BlacksCW.TimeScale = 1
 
+local host_timescale = GetConVar("host_timescale")
+function BlacksCW.GetSimulationTimeScale()
+	return BlacksCW.TimeScale * host_timescale:GetFloat()
+end
+
 if SERVER then
 	util.AddNetworkString("BlacksCW_NetworkBullets")
 	util.AddNetworkString("BlacksCW_BulletImpact")
@@ -227,14 +232,14 @@ function BlacksCW.SimulateBullet(bullet)
 
 		bullet.Position = bullet.TraceResult.HitPos
 		bullet.Velocity = nextvelocity / BlacksCW.TickInterval
-		bullet.SimulationTime = bullet.SimulationTime + (BlacksCW.TickInterval / BlacksCW.TimeScale)
+		bullet.SimulationTime = bullet.SimulationTime + (BlacksCW.TickInterval / BlacksCW.GetSimulationTimeScale())
 	end
 
 end
 
 function BlacksCW.SimulatePhysBullets(arguments)
 	BlacksCW.CurrentTime = SysTime()
-	BlacksCW.TickInterval = (1 / BlacksCW.UpdateRate) * BlacksCW.TimeScale
+	BlacksCW.TickInterval = (1 / BlacksCW.UpdateRate) * BlacksCW.GetSimulationTimeScale()
 
 	for bulletId, bullet in pairs(BlacksCW.PhysBullets) do
 
