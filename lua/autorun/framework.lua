@@ -1,5 +1,18 @@
 AddCSLuaFile()
 
+function UTIL_UnitsToMeters(units)
+	return units * 0.01905
+end
+function UTIL_MetersToUnits(meters)
+	return meters / 0.01905
+end
+function UTIL_UnitsToFeet(units)
+	return units / 16
+end
+function UTIL_FeetToUnits(feet)
+	return feet * 16
+end
+
 if not util.ImpactTraceW then
 	function util.ImpactTraceW(tr, iDamageType, effect)
 		if not tr.Entity or tr.HitSky then
