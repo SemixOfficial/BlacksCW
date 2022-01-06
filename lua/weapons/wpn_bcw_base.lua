@@ -26,19 +26,21 @@ SWEP.Secondary.Automatic	= false
 SWEP.Secondary.Ammo			= "none"
 
 function SWEP:Initialize()
-    self:SetSpreadRandomSeed(0)
+	self:SetSpreadRandomSeed(0)
 	self:SetHoldType(self.HoldType)
 	self:GenerateRecoilTable()
 end
 
 function SWEP:SetupDataTables()
-    self:NetworkVar("Float", 0, "NextIdleTime")
+	self:NetworkVar("Float", 0, "NextIdleTime")
 	self:NetworkVar("Float", 1, "ReloadFinishTime")
-    self:NetworkVar("Float", 2, "RecoilIndex")
+	self:NetworkVar("Float", 2, "RecoilIndex")
 
 	self:NetworkVar("Bool", 0, "IsReloading")
 
-    self:NetworkVar("Int", 0, "SpreadRandomSeed")
+	self:NetworkVar("Int", 0, "SpreadRandomSeed")
+
+	self:SetRecoilIndex(1)
 end
 
 function SWEP:Holster()
@@ -275,7 +277,7 @@ function SWEP:PrimaryAttack()
 	shootAngle:Normalize()
 
 	local recoilVelocity = owner:GetViewPunchVelocity()
-	recoilVelocity = recoilVelocity + self.Recoil.Table[math.Round(recoilIndex)] * self.Recoil.Scale
+	recoilVelocity = recoilVelocity + self.Recoil.Table[math.floor(recoilIndex)] * self.Recoil.Scale
 	recoilVelocity:Normalize()
 	owner:SetViewPunchVelocity(recoilVelocity)
 
@@ -327,12 +329,7 @@ function SWEP:PrimaryAttack()
 	self:CalculateNextAttackTime(self.CycleTime)
 	self:SetSpreadRandomSeed(math.fmod(seed + 1, 0x7FFFFFFF))
 
-	recoilIndex = recoilIndex + 1
-	if recoilIndex > #self.Recoil.Table then
-		recoilIndex = recoilIndex - 5
-	end
-
-	self:SetRecoilIndex(recoilIndex)
+	self:SetRecoilIndex(recoilIndex + 1)
 end
 
 function SWEP:CanSecondaryAttack()
