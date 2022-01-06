@@ -123,6 +123,7 @@ if SERVER then
 		damageInfo:SetAmmoType(game.GetAmmoID(inflictor.Primary.Ammo))
 
 		if victim:IsPlayer() then
+			victim:SetLastHitGroup(hitgroup)
 			hook.Run("ScalePlayerDamage", victim, hitgroup, damageInfo)
 		elseif victim:IsNPC() or victim:IsNextBot() then
 			hook.Run("ScaleNPCDamage", victim, hitgroup, damageInfo)
