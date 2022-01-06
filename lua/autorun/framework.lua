@@ -137,6 +137,7 @@ if CLIENT then
 		local position = net.ReadVector()
 		local velocity = net.ReadNormal()
 		local speed = net.ReadFloat()
+		local creationTime = net.ReadFloat()
 
 		if not IsValid(inflictor) then
 			return
@@ -158,6 +159,7 @@ if CLIENT then
 		bulletInfo.Initialize		= projectileInfo.Initialize
 		bulletInfo.Draw				= projectileInfo.Draw
 		bulletInfo.OnImpact			= projectileInfo.OnImpact
+		bulletInfo.CreationTime 	= creationTime
 
 		BlacksCW.FireBullets(bulletInfo)
 	end)
@@ -194,6 +196,7 @@ function BlacksCW.FireBullets(bulletInfo)
 	}
 	bullet.TraceResult		= {}
 	bullet.IsMarkedForRemoval	= false
+	bullet.CreationTime 		= BlacksCW.CurrentTime
 	bullet.SimulationTime		= BlacksCW.CurrentTime
 	bullet.Draw = bulletInfo.Draw
 	bullet.OnImpact = bulletInfo.OnImpact
@@ -209,6 +212,7 @@ function BlacksCW.FireBullets(bulletInfo)
 			net.WriteVector(bulletInfo.Position)
 			net.WriteVector(bulletInfo.Velocity:GetNormalized())
 			net.WriteFloat(bulletInfo.Velocity:Length())
+			net.WriteFloat(bullet.CreationTime)
 		net.SendOmit(bulletInfo.Attacker)
 	end
 end
