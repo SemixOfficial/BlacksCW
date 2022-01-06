@@ -18,9 +18,9 @@ SWEP.AdminOnly		= false
 SWEP.CycleTime = 60 / 857 -- RPM
 
 SWEP.Animations = {
-    Fire = "fire",
-    Reload = "reload_1",
-    Reload_Empty = "reload_2"
+	Fire = "fire",
+	Reload = "reload_1",
+	Reload_Empty = "reload_2"
 }
 
 SWEP.Recoil = {}

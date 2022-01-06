@@ -133,23 +133,23 @@ end
 
 -- From homonovus :>
 function SWEP:SetWeaponSequence(sequence, playbackRate)
-    if sequence == -1 then
+	if sequence == -1 then
 		return false
 	end
 
-    self:SendViewModelMatchingSequence(sequence)
+	self:SendViewModelMatchingSequence(sequence)
 
-    local owner = self:GetOwner()
-    if owner:IsValid() then
-        local vm = owner:GetViewModel()
-        if vm:IsValid() then
-            vm:SendViewModelMatchingSequence(sequence)
-            vm:SetPlaybackRate(playbackRate)
-        end
-    end
+	local owner = self:GetOwner()
+	if owner:IsValid() then
+		local vm = owner:GetViewModel()
+		if vm:IsValid() then
+			vm:SendViewModelMatchingSequence(sequence)
+			vm:SetPlaybackRate(playbackRate)
+		end
+	end
 
-    self:SetNextIdleTime(CurTime() + (self:SequenceDuration(idealSequence) * playbackRate))
-    return true
+	self:SetNextIdleTime(CurTime() + (self:SequenceDuration(sequence) * playbackRate))
+	return true
 end
 
 function SWEP:SetWeaponSequenceByName(sequenceName, playbackRate)
@@ -158,18 +158,18 @@ function SWEP:SetWeaponSequenceByName(sequenceName, playbackRate)
 end
 
 function SWEP:SetWeaponAnim(act, playbackRate)
-    local idealSequence = self:SelectWeightedSequence(act)
-    if idealSequence == -1 then
+	local idealSequence = self:SelectWeightedSequence(act)
+	if idealSequence == -1 then
 		 return false
 	end
 
-    self:SendWeaponAnim(act)
-    self:SendViewModelMatchingSequence(idealSequence)
-    self:SetPlaybackRate(playbackRate)
+	self:SendWeaponAnim(act)
+	self:SendViewModelMatchingSequence(idealSequence)
+	self:SetPlaybackRate(playbackRate)
 
-    -- Set the next time the weapon will idle
-    self:SetNextIdleTime(CurTime() + (self:SequenceDuration() * playbackRate))
-    return true
+	-- Set the next time the weapon will idle
+	self:SetNextIdleTime(CurTime() + (self:SequenceDuration() * playbackRate))
+	return true
 end
 
 function SWEP:PlayAnimation(animation, playbackRate)
@@ -377,7 +377,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:CanSecondaryAttack()
-    return false -- big gamer
+	return false -- big gamer
 end
 
 function SWEP:SecondaryAttack()
@@ -386,7 +386,7 @@ end
 
 function SWEP:DoDrawCrosshair(x, y)
 	local owner = LocalPlayer()
-	if (!IsValid(owner) || !owner:Alive()) then
+	if not (IsValid(owner) and owner:Alive()) then
 		return
 	end
 
@@ -398,12 +398,12 @@ function SWEP:DoDrawCrosshair(x, y)
 	local fixedFov = (scrSide * math.sin(math.rad(spreadFov))) / math.sin(math.rad(arAngle))
 	local maxFov = math.sqrt(((0.5 * ScrW()) ^ 2) + ((0.5 * ScrH()) ^ 2))
 
-	if (spreadFov > 0 && fixedFov <= maxFov && spreadFov <= owner:GetFOV()) then
+	if (spreadFov > 0 and fixedFov <= maxFov and spreadFov <= owner:GetFOV()) then
 		local eyeTrace = owner:GetEyeTrace()
 		local gap = math.ceil(fixedFov)
 		local color = Color(0, 255, 0, 255)
 		local hitEntity = eyeTrace.Entity
-		if (IsValid(hitEntity) && (hitEntity:IsPlayer() || hitEntity:IsNPC() || hitEntity:IsNextBot())) then
+		if (IsValid(hitEntity) and (hitEntity:IsPlayer() or hitEntity:IsNPC() or hitEntity:IsNextBot())) then
 			color = Color(255, 0, 0)
 		end
 
@@ -411,8 +411,8 @@ function SWEP:DoDrawCrosshair(x, y)
 		surface.DrawRect(x - 1, y - 1, 3, 3)
 		surface.DrawRect((x - 1) + gap, y - 1, 8, 3)
 		surface.DrawRect((x - 1) - (5 + gap), y - 1, 8, 3)
-		surface.DrawRect((x - 1), (y - 1) + gap, 3, 8)
-		surface.DrawRect((x - 1), (y - 1) - (5 + gap), 3, 8)
+		surface.DrawRect(x - 1, (y - 1) + gap, 3, 8)
+		surface.DrawRect(x - 1, (y - 1) - (5 + gap), 3, 8)
 
 		surface.SetDrawColor(color)
 		surface.DrawRect(x, y, 1, 1)

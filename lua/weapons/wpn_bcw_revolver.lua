@@ -19,8 +19,8 @@ SWEP.CanChamberRound = false
 SWEP.CycleTime = 60 / 80 -- RPM
 
 SWEP.Animations = {
-    Fire = "fire",
-    Reload = "reload",
+	Fire = "fire",
+	Reload = "reload",
 }
 
 SWEP.Recoil = {}
