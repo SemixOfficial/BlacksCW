@@ -6,6 +6,8 @@ SWEP.Author			= "BlacK"
 
 SWEP.HoldType		= "ar2"
 SWEP.UseHands		= true
+SWEP.BobScale		= 1
+SWEP.SwayScale		= 2
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
 SWEP.ViewModel		= "models/weapons/v_rif_mw8_peacemaker.mdl"
@@ -14,14 +16,29 @@ SWEP.WorldModel		= "models/weapons/w_rif_mw8_peacemaker.mdl"
 SWEP.Spawnable		= true
 SWEP.AdminOnly		= false
 
-
 SWEP.CycleTime = 60 / 857 -- RPM
 
 SWEP.Animations = {
 	Fire = "fire",
 	Reload = "reload_1",
-	Reload_Empty = "reload_2"
+	Reload_Empty = "reload_2",
 }
+SWEP.UsesProceduralSprintAnimation = false
+
+SWEP.Debug = {}
+SWEP.Debug.Sights = false
+SWEP.Debug.Attachments = false
+SWEP.Debug.Bones = false
+
+SWEP.Inaccuracy				= {}
+SWEP.Inaccuracy.Crouched	= 2.45	-- Base inaccuracy when crouching. (in minutes of arc)
+SWEP.Inaccuracy.Standing	= 3		-- Base inaccuracy when stood still. (in minutes of arc)
+SWEP.Inaccuracy.Walking		= 75	-- How much inaccuracy the gun gains per one m/s of velocity. (in minutes of arc)
+SWEP.Inaccuracy.Firing		= 1.5	-- How much inaccuracy the gun gains everytime it's fired. (in minutes of arc)
+SWEP.Inaccuracy.Decay		= 0.5	-- How long it takes for this weapon to recover from it's max inaccuracy. (in seconds)
+SWEP.Inaccuracy.Max			= 8.5	-- Max possible inaccuracy from firing. (in minutes of arc)
+SWEP.Inaccuracy.Gaussian	= 1		-- Controls the gaussian distribution of the bullet spread, 1 is full gaussian, 0 is flat, -1 is inverse gaussian.
+SWEP.Inaccuracy.Bias		= 0		-- Controlls the spread distribution across pitch and yaw, 1 will make the spread fully horizontal, 0 is uniform, -1 will make it completely vertical.
 
 SWEP.Recoil = {}
 SWEP.Recoil.RandomSeed = 225
@@ -37,13 +54,19 @@ SWEP.Recoil.Decay_Exponent = 1
 SWEP.Recoil.Table = {}
 
 function SWEP:ProjectileInit()
-	self.Projectile = table.Copy(BaseClass.Projectile)
+	self.Projectile = table.Copy(BlacksCW.BaseProjectile)
 	self.Projectile.Mass        = 42	-- Grains
 	self.Projectile.Drag        = 0.1	-- No-Unit (multiplier)
 	self.Projectile.Gravity     = 800	-- Inches per second
 	self.Projectile.Velocity    = 600   -- Meters per second
 	self.Projectile.Caliber     = 4.6	-- Milimeters
 end
+
+SWEP.AllowADS = true
+SWEP.ADSTime = 0.15
+SWEP.ADSPosition = Vector(-7.79, -8, 2.25)
+SWEP.ADSAngles = Angle(0, 0, 0)
+SWEP.ADSMagnification = 1.5
 
 SWEP.Primary.ClipSize		= 30 -- Rounds
 SWEP.Primary.DefaultClip	= 90 -- Rounds
