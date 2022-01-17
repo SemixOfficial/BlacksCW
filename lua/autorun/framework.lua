@@ -219,6 +219,11 @@ end
 function BlacksCW.FireBullets(bulletInfo)
 	local bullet = {}
 
+	local tracefilter		= {bulletInfo.Attacker}
+	if g_CapsuleHitboxes then
+		tracefilter = g_CapsuleHitboxes:GetEntitiesWithCapsuleHitboxes()
+	end
+
 	bullet.Index			= #BlacksCW.PhysBullets
 	bullet.Attacker			= bulletInfo.Attacker
 	bullet.Inflictor		= bulletInfo.Inflictor
@@ -232,7 +237,7 @@ function BlacksCW.FireBullets(bulletInfo)
 	bullet.Mass				= bulletInfo.Mass
 	bullet.TraceData		= {
 		mask = MASK_SHOT,
-		filter = bulletInfo.Attacker
+		filter = tracefilter
 	}
 	bullet.TraceResult		= {}
 	bullet.IsMarkedForRemoval	= false
@@ -356,11 +361,14 @@ function BlacksCW.SimulateBullet(bullet)
 		bullet.TraceData.endpos = nextposition
 		bullet.TraceResult      = util.TraceLine(bullet.TraceData)
 
+		g_CapsuleHitboxes:IntersectRayWithEntities(bullet.TraceResult, {[bullet.Attacker] = true})
+
 		local speedfrac = 1 - (speed / (bullet.InitialVelocity:Length() * BlacksCW.TickInterval))
-		debugoverlay.Line(bullet.TraceResult.StartPos, bullet.TraceResult.HitPos, 4, Color(255, 255 * speedfrac, 255 * speedfrac, 255), true)
+		debugoverlay.Line(bullet.TraceResult.StartPos, bullet.TraceResult.HitPos, 4, Color(255 * speedfrac, 255, 255 * speedfrac, 255), true)
 		--debugoverlay.BoxAngles(bullet.TraceResult.HitPos, Vector(-32, -1, -1), Vector(32, 1, 1), velocity:Angle(), 4, Color(0, 255, 0, 127))
 
 		if bullet.TraceResult.Hit then
+			debugoverlay.Cross(bullet.TraceResult.HitPos, 8, 4, Color(255 * speedfrac, 255, 255 * speedfrac, 255), true)
 			local hitEntity = bullet.TraceResult.Entity
 			if IsValid(hitEntity) and bullet.Attacker == localplayer then
 				net.Start("BlacksCW_BulletImpact", true)
