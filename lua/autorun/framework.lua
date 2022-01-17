@@ -361,7 +361,9 @@ function BlacksCW.SimulateBullet(bullet)
 		bullet.TraceData.endpos = nextposition
 		bullet.TraceResult      = util.TraceLine(bullet.TraceData)
 
-		g_CapsuleHitboxes:IntersectRayWithEntities(bullet.TraceResult, {[bullet.Attacker] = true})
+		if g_CapsuleHitboxes then
+			g_CapsuleHitboxes:IntersectRayWithEntities(bullet.TraceResult, {[bullet.Attacker] = true})
+		end
 
 		local speedfrac = 1 - (speed / (bullet.InitialVelocity:Length() * BlacksCW.TickInterval))
 		debugoverlay.Line(bullet.TraceResult.StartPos, bullet.TraceResult.HitPos, 4, Color(255 * speedfrac, 255, 255 * speedfrac, 255), true)
