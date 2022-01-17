@@ -1,4 +1,5 @@
 function SWEP:GetViewModelPosition(eyePos, eyeAngles)
+	local owner = self:GetOwner()
 	local mult = self:GetADSDelta()
 	local offset = self.ADSPosition
 
@@ -8,6 +9,10 @@ function SWEP:GetViewModelPosition(eyePos, eyeAngles)
 		eyeAngles:RotateAroundAxis(eyeAngles:Forward(), self.ADSAngles.z * mult)
 	end
 
+	local velocity = owner:GetAbsVelocity()
+	local zoffset = velocity.z * self.BobScale * (1 - (math.abs(eyeAngles.p) / 89))
+	eyeAngles:RotateAroundAxis(eyeAngles:Right(), -zoffset * FrameTime())
+
 	local right 	= eyeAngles:Right()
 	local up 		= eyeAngles:Up()
 	local forward 	= eyeAngles:Forward()
@@ -16,7 +21,7 @@ function SWEP:GetViewModelPosition(eyePos, eyeAngles)
 	eyePos = eyePos + offset.y * forward * mult
 	eyePos = eyePos + offset.z * up * mult
 
-	return eyePos, EyeAng
+	return eyePos, eyeAngles
 end
 
 function SWEP:PreDrawViewModel(viewmodel, weapon, ply)

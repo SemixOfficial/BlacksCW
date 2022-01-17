@@ -93,6 +93,7 @@ BlacksCW.BaseProjectile = {
 	Gravity     = 800,	-- Inches per second
 	Velocity    = 400,   -- Meters per second
 	Caliber     = 9,	-- Milimeters
+	Count		= 1,
 
 	Initialize	= function(self)
 		-- Called when bullet is initialized.

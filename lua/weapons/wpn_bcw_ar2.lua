@@ -18,8 +18,18 @@ SWEP.CanChamberRound = false
 SWEP.CycleTime = 60 / 600 -- RPM
 
 SWEP.Animations = {
-	Fire = "ir_fire",
-	Reload = "ir_reload",
+	["Fire"] = {
+		Sequence = "ir_fire",
+		Animation = PLAYER_ATTACK1,
+		Activity = ACT_VM_PRIMARYATTACK,
+		PlaybackRate = 1
+	},
+	["Reload"] = {
+		Sequence = "ir_reload",
+		Animation = PLAYER_RELOAD,
+		Activity = ACT_VM_RELOAD,
+		PlaybackRate = 1
+	}
 }
 
 SWEP.Debug = {}
@@ -88,5 +98,6 @@ SWEP.Primary.DefaultClip	= 90 -- Rounds
 SWEP.Primary.Damage         = 33 -- HP
 SWEP.Primary.HSMultiplier   = 1.5 -- No-Unit (multiplier)
 SWEP.Primary.Automatic		= true -- Self-Explanatory
+SWEP.Primary.ChamberSize	= 0
 SWEP.Primary.Sound          = "Weapon_AR2.Single" -- Shoot sound
 SWEP.Primary.Ammo			= "AR2" -- Ammo type

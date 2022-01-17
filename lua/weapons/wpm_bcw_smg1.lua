@@ -17,9 +17,24 @@ SWEP.AdminOnly		= false
 SWEP.CycleTime = 60 / 950 -- RPM
 
 SWEP.Animations = {
-	Fire = "fire01",
-	DryFire = "fire04",
-	Reload = "reload",
+	["Fire"] = {
+		Sequence = "fire01",
+		Animation = PLAYER_ATTACK1,
+		Activity = ACT_VM_PRIMARYATTACK,
+		PlaybackRate = 1
+	},
+	["Dry Fire"] = {
+		Sequence = "fire04",
+		Animation = PLAYER_ATTACK1,
+		Activity = ACT_VM_PRIMARYATTACK,
+		PlaybackRate = 1
+	},
+	["Reload"] = {
+		Sequence = "reload",
+		Animation = PLAYER_RELOAD,
+		Activity = ACT_VM_RELOAD,
+		PlaybackRate = 1
+	}
 }
 
 SWEP.Debug = {}
@@ -69,6 +84,7 @@ SWEP.Primary.ClipSize		= 40 -- Rounds
 SWEP.Primary.DefaultClip	= 160 -- Rounds
 SWEP.Primary.Damage         = 18 -- HP
 SWEP.Primary.HSMultiplier   = 1.5 -- No-Unit (multiplier)
-SWEP.Primary.Automatic		= true -- Self-Explanatory
+SWEP.Primary.Automatic		= true -- Self-Explanatory¨
+SWEP.Primary.ChamberSize	= 1
 SWEP.Primary.Sound          = "Weapon_SMG1.Single" -- Shoot sound
 SWEP.Primary.Ammo			= "AR2" -- Ammo type

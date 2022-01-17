@@ -19,8 +19,30 @@ SWEP.CanChamberRound = false
 SWEP.CycleTime = 60 / 80 -- RPM
 
 SWEP.Animations = {
-	Fire = "fire",
-	Reload = "reload",
+	["Fire"] = {
+		Sequence = "fire",
+		Animation = PLAYER_ATTACK1,
+		Activity = ACT_VM_PRIMARYATTACK,
+		PlaybackRate = 2
+	},
+	["Reload Start"] = {
+		Sequence = "reload_start",
+		Animation = PLAYER_RELOAD,
+		Activity = ACT_VM_RELOAD,
+		PlaybackRate = 1
+	},
+	["Reload Loop"] = {
+		Sequence = "reload_loop",
+		Animation = PLAYER_RELOAD,
+		Activity = ACT_VM_RELOAD,
+		PlaybackRate = 1
+	},
+	["Reload End"] = {
+		Sequence = "reload_end",
+		Animation = PLAYER_RELOAD,
+		Activity = ACT_VM_RELOAD,
+		PlaybackRate = 1
+	}
 }
 
 SWEP.Debug = {}
@@ -80,5 +102,6 @@ SWEP.Primary.DefaultClip	= 24 -- Rounds
 SWEP.Primary.Damage         = 72 -- HP
 SWEP.Primary.HSMultiplier   = 2.5 -- No-Unit (multiplier)
 SWEP.Primary.Automatic		= true -- Self-Explanatory
+SWEP.Primary.ChamberSize	= 0
 SWEP.Primary.Sound          = "Weapon_357.Single" -- Shoot sound
 SWEP.Primary.Ammo			= "357" -- Ammo type

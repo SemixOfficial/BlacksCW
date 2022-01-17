@@ -19,11 +19,25 @@ SWEP.AdminOnly		= false
 SWEP.CycleTime = 60 / 857 -- RPM
 
 SWEP.Animations = {
-	Fire = "fire",
-	Reload = "reload_1",
-	Reload_Empty = "reload_2",
+	["Fire"] = {
+		Sequence = "fire",
+		Animation = PLAYER_ATTACK1,
+		Activity = ACT_VM_PRIMARYATTACK,
+		PlaybackRate = 1
+	},
+	["Reload"] = {
+		Sequence = "reload_1",
+		Animation = PLAYER_RELOAD,
+		Activity = ACT_VM_RELOAD,
+		PlaybackRate = 1
+	},
+	["Reload Empty"] = {
+		Sequence = "reload_2",
+		Animation = PLAYER_RELOAD,
+		Activity = ACT_VM_RELOAD2,
+		PlaybackRate = 1
+	}
 }
-SWEP.UsesProceduralSprintAnimation = false
 
 SWEP.Debug = {}
 SWEP.Debug.Sights = false
@@ -36,6 +50,7 @@ SWEP.Inaccuracy.Standing	= 3		-- Base inaccuracy when stood still. (in minutes o
 SWEP.Inaccuracy.Walking		= 75	-- How much inaccuracy the gun gains per one m/s of velocity. (in minutes of arc)
 SWEP.Inaccuracy.Firing		= 1.5	-- How much inaccuracy the gun gains everytime it's fired. (in minutes of arc)
 SWEP.Inaccuracy.Decay		= 0.5	-- How long it takes for this weapon to recover from it's max inaccuracy. (in seconds)
+SWEP.Inaccuracy.Scoped		= 0.33	-- Inaccuracy multiplier for when aiming down the sights.
 SWEP.Inaccuracy.Max			= 8.5	-- Max possible inaccuracy from firing. (in minutes of arc)
 SWEP.Inaccuracy.Gaussian	= 1		-- Controls the gaussian distribution of the bullet spread, 1 is full gaussian, 0 is flat, -1 is inverse gaussian.
 SWEP.Inaccuracy.Bias		= 0		-- Controlls the spread distribution across pitch and yaw, 1 will make the spread fully horizontal, 0 is uniform, -1 will make it completely vertical.
@@ -76,6 +91,7 @@ SWEP.Primary.MuzzleVelocity = 715 -- Meters per second
 SWEP.Primary.ProjectileMass = 62 -- Grains
 SWEP.Primary.HSMultiplier   = 2.25 -- No-Unit
 SWEP.Primary.Automatic		= true -- Self-Explanatory
+SWEP.Primary.ChamberSize	= 1
 SWEP.Primary.Sound          = "Mike4.Single" -- Shoot sound
 SWEP.Primary.Ammo			= "AR2" -- Ammo type
 

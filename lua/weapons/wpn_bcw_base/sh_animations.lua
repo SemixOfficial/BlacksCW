@@ -15,8 +15,9 @@ function SWEP:SetWeaponSequence(sequence, playbackRate)
 		end
 	end
 
-	self:SetNextIdleTime(CurTime() + (self:SequenceDuration(sequence) * playbackRate))
-	return true
+	local duration = self:SequenceDuration(sequence) / playbackRate
+	self:SetNextIdleTime(CurTime() + duration)
+	return true, duration
 end
 
 function SWEP:SetWeaponSequenceByName(sequenceName, playbackRate)
@@ -34,17 +35,32 @@ function SWEP:SetWeaponAnim(act, playbackRate)
 	self:SendViewModelMatchingSequence(idealSequence)
 	self:SetPlaybackRate(playbackRate)
 
-	-- Set the next time the weapon will idle
-	self:SetNextIdleTime(CurTime() + (self:SequenceDuration() * playbackRate))
-	return true
+	local duration = self:SequenceDuration(sequence) / playbackRate
+	self:SetNextIdleTime(CurTime() + duration)
+	return true, duration
 end
 
 function SWEP:PlayAnimation(animation, playbackRate)
 	local animData = self.Animations[animation]
 
-	if istable(animData) then
-		self:SetWeaponSequenceByName(table.Random(animData), playbackRate)
-	elseif isstring(animData) then
-		self:SetWeaponSequenceByName(animData, playbackRate)
+	if animData.PlaybackRate then
+		playbackRate = animData.PlaybackRate
 	end
+
+	local owner = self:GetOwner()
+	if IsValid(owner) and animData.Animation then
+		owner:SetAnimation(animData.Animation)
+	end
+
+	if animData.Sequence then
+		return self:SetWeaponSequenceByName(animData.Sequence, playbackRate)
+	end
+
+	if animData.Activity then
+		self:SetPlaybackRate(playbackRate)
+		self:SendWeaponAnim(animData.Activity)
+		return true, self:SequenceDuration() * playbackRate
+	end
+
+	return false
 end
