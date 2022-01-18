@@ -159,6 +159,8 @@ if SERVER then
 			return
 		end
 
+		print(inflictor, ply)
+
 		-- debugoverlay.Line(hitpos, hitpos + velocity, 4, Color( 255, 255, 255 ), false)
 		local damageInfo = DamageInfo()
 		damageInfo:SetAttacker(ply)
@@ -220,8 +222,9 @@ function BlacksCW.FireBullets(bulletInfo)
 	local bullet = {}
 
 	local tracefilter		= {bulletInfo.Attacker}
+	local capsuleEntities = {}
 	if g_CapsuleHitboxes then
-		tracefilter = g_CapsuleHitboxes:GetEntitiesWithCapsuleHitboxes()
+		capsuleEntities	= g_CapsuleHitboxes:GetEntitiesWithCapsuleHitboxes(bulletInfo.Attacker)
 	end
 
 	bullet.Index			= #BlacksCW.PhysBullets
@@ -235,6 +238,7 @@ function BlacksCW.FireBullets(bulletInfo)
 	bullet.ReferenceArea	= math.pi * ((0.5 * bulletInfo.Diameter) ^ 2)
 	bullet.IsInSolid		= false
 	bullet.Mass				= bulletInfo.Mass
+	bullet.CapsuleShit		= table.Copy(capsuleEntities)
 	bullet.TraceData		= {
 		mask = MASK_SHOT,
 		filter = tracefilter
@@ -362,7 +366,7 @@ function BlacksCW.SimulateBullet(bullet)
 		bullet.TraceResult      = util.TraceLine(bullet.TraceData)
 
 		if g_CapsuleHitboxes then
-			g_CapsuleHitboxes:IntersectRayWithEntities(bullet.TraceResult, {[bullet.Attacker] = true})
+			g_CapsuleHitboxes:IntersectRayWithEntities(bullet.TraceResult, bullet.CapsuleShit)
 		end
 
 		local speedfrac = 1 - (speed / (bullet.InitialVelocity:Length() * BlacksCW.TickInterval))

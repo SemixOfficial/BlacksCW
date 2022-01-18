@@ -130,6 +130,18 @@ function SWEP:Reload()
 		return
 	end
 
+	local reserveAmmoType = self:GetPrimaryAmmoType()
+	local reserveAmmoCount = owner:GetAmmoCount(reserveAmmoType)
+	if reserveAmmoCount <= 0 then
+		return false
+	end
+
+	local ammoCount = self:Clip1()
+	local maxAmmoCount = self:GetMaxAmmo()
+	if ammoCount >= maxAmmoCount then
+		return false
+	end
+
 	local sequence = "Reload"
 	if not self:GetIsPrimed() and animData["Reload Empty"] then
 		sequence = "Reload Empty"
